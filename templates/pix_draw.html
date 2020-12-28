@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>pix draw</title>
+	
+	<style type="text/css">
+		#draw{
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			z-index: -10;
+		}
+		#grid{
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			z-index: -5;
+		}
+	</style>
+</head>
+<body>
+
+<canvas id="draw"></canvas>
+<canvas id="grid"></canvas>
+<script type="text/javascript">
+	cell_len=20;
+	draw=document.getElementById("draw");
+	grid=document.getElementById("grid");
+	
+	width=grid.width=draw.width=window.innerWidth;
+	height=grid.height=draw.height=window.innerHeight;
+	
+	ctx=draw.getContext("2d");
+	grid_ctx=grid.getContext("2d");
+	drawflag=false;
+	init_grid_draw();
+
+
+	//初始化画布背景色以及网格
+	function init_grid_draw(){
+		ctx.fillStyle="rgb(140,140,140)";
+		ctx.fillRect(0,0,width,height);
+
+
+
+		grid_ctx.beginPath();
+		
+
+		grid_ctx.strokeStyle = 'rgba(255,255,255,0.5)'; 
+		grid_ctx.lineWidth = 1; 
+		for(i=0;i<width/cell_len;i++){
+			grid_ctx.moveTo(i*cell_len,0);
+			grid_ctx.lineTo(i*cell_len,height);
+		}
+		for(j=0;j<height/cell_len;j++){
+			grid_ctx.moveTo(0,j*cell_len);
+			grid_ctx.lineTo(width,j*cell_len);
+		}
+		grid_ctx.stroke();
+	}
+
+	//绘画事件
+	grid.onmousedown=function(event){
+		ctx.fillStyle='rgb(0,0,230)';
+		var x=parseInt(event.clientX/cell_len)*cell_len;
+		var y=parseInt(event.clientY/cell_len)*cell_len
+		ctx.fillRect(x,y,cell_len,cell_len);
+		drawflag=true;
+	}
+	grid.onmousemove=function(event){
+		if(drawflag!=true){
+			return;
+		}
+		else{
+			ctx.fillStyle='rgb(0,0,230)';
+			var x=parseInt(event.clientX/cell_len)*cell_len;
+			var y=parseInt(event.clientY/cell_len)*cell_len;
+			ctx.fillRect(x,y,cell_len,cell_len);
+		}
+	}
+	grid.onmouseup=function(){
+		drawflag=false;
+	}
+	//导出
+
+	
+</script>
+</body>
+</html>
