@@ -2,6 +2,11 @@ from flask import Flask
 import json
 from flask import render_template,request,redirect,jsonify
 app=Flask(__name__)
+
+
+
+
+
 @app.route("/")
 def hello_world():
     return "hello!,gg,Hello,World!"
@@ -11,32 +16,11 @@ def hello_world():
 def multi(name=None):
     return render_template('multi_cav.html',name=name)
 
-@app.route("/login", methods=("GET", "POST"))
-def login():
-  # GET请求
-  if request.method == "GET":
-    return render_template("new_login.html")
-  # POST请求
-  if request.method == "POST":
-
-    print(request.headers)
-    print(request.json)
-    print(request.data)
-    # 获取数据并转化成字典
-    user_info = request.form.to_dict()
-    if user_info.get("username") == "admin" and user_info.get("password") == '123456':
-      return redirect("/")
-  print(request.form.to_dict())
-  # args 获取地址栏的hash值
-  print(request.args.to_dict())
-  return "用户名密码错误"
-
-
-@app.route("/out", methods=("GET", "POST"))
+@app.route("/pix_draw", methods=("GET", "POST"))
 def out():
   # GET请求
   if request.method == "GET":
-    return render_template("out_draw.html")
+    return render_template("pix_draw.html")
   # POST请求
   if request.method == "POST":
 
@@ -88,3 +72,7 @@ def in_not_python():
             #now i find that it need the width and the length cells
             #so then i need to change the out_draw.html
         return jsonify(end_rsp)
+
+
+
+

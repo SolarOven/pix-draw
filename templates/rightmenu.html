@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.right{
+			width: 100px;
+			height: 100px;
+			background: red;
+		}
+	</style>
+</head>
+<body>
+	<ul id="floormenu">
+		<li>del</li>
+		<li>rename</li>
+		<li>close</li>
+	</ul>
+
+	<div class="right">
+	    在此区域点击右键
+	</div>
+
+	<script>
+	
+
+	var ul=document.getElementById('floormenu');
+	ul.style.display="none";
+	ul.style.position="absolute";
+	ul.style.border="1px solid black";
+	ul.style.background="white";	
+	var lis=document.getElementsByTagName('li');
+	lis[0].style.display=	"none";
+	lis[1].style.display="none";
+	lis[2].style.display="none";
+
+	lis[0].setAttribute("onclick","delete_floor_and_canv()");
+	lis[1].setAttribute("onclick","rename_floor_and_canv()");
+	lis[2].setAttribute("onclick","cancel()");
+
+
+	window.onload = function(){
+	   var right = document.querySelector('.right');
+	   //去掉默认的contextmenu事件，否则会和右键事件同时出现。
+	   right.oncontextmenu = function(e){
+	       e.preventDefault();
+	   };
+
+	   right.onmousedown = function(e){
+
+	       if(e.button ==2){
+	       		ul.style.display="block";
+	       		lis[0].style.display="block";
+				lis[1].style.display="block";
+				lis[2].style.display="block";
+				ul.style.top=e.clientY+"px";
+				ul.style.left=e.clientX+"px";
+				console.log(e.clientX,e.clientY);
+				
+	       }else if(e.button ==0){
+	           alert("你点了左键");
+	       }else if(e.button ==1){
+	           alert("你点了滚轮");
+	       }
+	   }
+	}
+	function cancel(){
+		ul.style.display="none";
+		lis[0].style.display="none";
+		lis[1].style.display="none";
+		lis[2].style.display="none";
+	}
+	function delete_floor_and_canv(){
+		console.log("delete_floor_and_canv");
+	}
+
+	function rename_floor_and_canv(){
+		console.log("rename_floor_and_canv");
+	}
+	</script>
+
+
+</body>
+</html>

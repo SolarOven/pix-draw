@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>color</title>
+</head>
+<body>
+	<canvas id="colorbox1"></canvas>
+	<canvas id="colorbox2"></canvas>
+	<script type="text/javascript">
+		function cl_model_crt(tagname,id,classe,father,msg){
+
+			var s=document.createElement(tagname);
+			if(msg!=""){
+				s.appendChild(document.createTextNode(msg));
+			}
+			if(classe!=""){
+				s.setAttribute("class",classe);			
+			}
+			s.setAttribute("id",id);
+			father.appendChild(s);
+			return s;
+		}
+
+		var cb1_ctx=document.getElementById("colorbox1").getContext("2d");
+		var cb2_ctx=document.getElementById("colorbox2").getContext("2d");
+		document.getElementById("colorbox1").style.width=""
+	</script>
+</body>
+</html>
