@@ -20,7 +20,8 @@
 	<div class="right">
 	    在此区域点击右键
 	</div>
-
+	<input id="rename_box" type="text" placeholder="Please input your floor's name">
+	<button id="yes new floor name" onclick="yesrename()"></button>
 	<script>
 	
 
@@ -69,6 +70,7 @@
 		lis[0].style.display="none";
 		lis[1].style.display="none";
 		lis[2].style.display="none";
+
 	}
 	function delete_floor_and_canv(){
 		console.log("delete_floor_and_canv");
@@ -76,7 +78,13 @@
 
 	function rename_floor_and_canv(){
 		console.log("rename_floor_and_canv");
+
 	}
+	function yesrename(){
+		var newname=document.getElementById("rename_box");
+		var oldcav=document.getElementById("f_"+);
+	}
+
 	</script>
 
 

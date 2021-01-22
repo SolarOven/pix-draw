@@ -96,58 +96,122 @@ function fl_model_add_floor_init(){
 	fl_model_setcavzindex();
 
 	//set floor right menu
-	ul=fl_model_crt("ul","floormenu","",body,"");
+	fl_model_ul=fl_model_crt("ul","floormenu","",body,"");
 
-	lis=[];
-	var li0=fl_model_crt("li","floormenu0","",ul,"delete");
-	var li1=fl_model_crt("li","floormenu1","",ul,"rename");
-	var li2=fl_model_crt("li","floormenu2","",ul,"cancel");
+	fl_model_lis=[];
+	var li0=fl_model_crt("li","floormenu0","",fl_model_ul,"delete");
+	var li1=fl_model_crt("li","floormenu1","",fl_model_ul,"rename");
+	var li2=fl_model_crt("li","floormenu2","",fl_model_ul,"cancel");
 	
-	lis.push(li0);
-	lis.push(li1);
-	lis.push(li2);
+	fl_model_lis.push(li0);
+	fl_model_lis.push(li1);
+	fl_model_lis.push(li2);
 
-	ul.style.position="absolute";
-	ul.style.display="none";
-	ul.style.border="1px solid black";
-	ul.style.background="white";	
-	ul.style.width="100px";
-	ul.style.height="60px";
-
-
-	lis[0].style.display="none";
-	lis[1].style.display="none";
-	lis[2].style.display="none";
+	fl_model_ul.style.position="absolute";
+	fl_model_ul.style.display="none";
+	fl_model_ul.style.border="1px solid black";
+	fl_model_ul.style.background="white";	
+	fl_model_ul.style.width="100px";
+	fl_model_ul.style.height="60px";
 
 
-	lis[0].setAttribute("onclick","fl_model_delete_floor_and_canv(this)");
-	lis[1].setAttribute("onclick","fl_model_rename_floor_and_canv(this)");
-	lis[2].setAttribute("onclick","fl_model_cancel()");
+	fl_model_lis[0].style.display="none";
+	fl_model_lis[1].style.display="none";
+	fl_model_lis[2].style.display="none";
+
+
+	fl_model_lis[0].setAttribute("onclick","fl_model_delete_floor_and_canv(this)");
+	fl_model_lis[1].setAttribute("onclick","fl_model_rename_floor_and_canv(this)");
+	fl_model_lis[2].setAttribute("onclick","fl_model_cancel()");
 	//set ret menu --- rename
 
+	// <input id="fl_rename_box" type="text" placeholder="Please input your floor's name">
+	// <button id="fl_yesrename" onclick="yesrename()"></button>
+	// function fl_model_crt(tagname,id,classe,father,msg)
+	var fl_rename_input=fl_model_crt("input","fl_model_rename_input","",body,"");
+	var fl_rename_button=fl_model_crt("button","fl_model_rename_button","",body,"yes");
 	
+	fl_rename_input.style.position="absolute";
+	fl_rename_button.style.position="absolute";
+	
+	fl_rename_input.style.display="none";
+	fl_rename_button.style.display="none";
 
+	fl_rename_button.style.width="50px";
+	fl_rename_button.style.height="30px";
+
+
+	fl_rename_input.style.width="100px";
+	fl_rename_input.style.height="30px";
+
+	fl_rename_button.style.zIndex=10;
+	fl_rename_input.style.zIndex=10;
+
+	fl_rename_button.setAttribute("onclick","fl_model_rename()");
+	
 }
 
 function fl_model_cancel(){
-	ul.style.display="none";
-	lis[0].style.display="none";
-	lis[1].style.display="none";
-	lis[2].style.display="none";
+	fl_model_ul.style.display="none";
+	fl_model_lis[0].style.display="none";
+	fl_model_lis[1].style.display="none";
+	fl_model_lis[2].style.display="none";
+
+
+	var rename_input=document.getElementById("fl_model_rename_input");
+	var rename_button=document.getElementById("fl_model_rename_button");
+	
+	rename_input.style.display="none";
+	rename_button.style.display="none";
+
 	fl_model_selected=null;
 }
 function fl_model_delete_floor_and_canv(){
 	fl_model_del(fl_model_selected);
-
 	console.log("delete_floor_and_canv");
+
 	fl_model_cancel();
 }
 
 function fl_model_rename_floor_and_canv(obj){
-	console.log("rename_floor_and_canv");
+	var rename_input=document.getElementById("fl_model_rename_input");
+	var rename_button=document.getElementById("fl_model_rename_button");
+	var selected_name="";
+
+	rename_input.style.display="block";
+	rename_button.style.display="block";
+ 	
+ 	rename_input.style.top=event.clientY+"px";
+ 	rename_button.style.top=String(Number(event.clientY)+35)+"px";
+
+ 	rename_input.style.left=event.clientX+"px";
+ 	rename_button.style.left=String(Number(event.clientX)+30)+"px";
+
+
+ 	console.log("rename_floor_and_canv");
+
 }
 
+function fl_model_rename(){
 
+	if(fl_model_selected==null){
+		alert("error,fl_model_selected==null");
+	}
+	else{
+		selected_name=fl_model_selected.id.substring(2,);
+		var rename_cav=document.getElementById("draw_"+selected_name);
+		var rename_floor=fl_model_selected;
+
+		var willbe_name=document.getElementById("fl_model_rename_input").value;
+		rename_floor.innerHTML=willbe_name;
+		rename_floor.id="f_"+willbe_name;
+		rename_cav.id="draw_"+willbe_name;
+		fl_model_cancel();
+		//【bug】推测若是用dom标签写的改id就会清空属性，其他则不会。
+
+	}
+
+}
 
 function fl_model_drag_and_right(obj){
 
@@ -181,12 +245,12 @@ function fl_model_drag_and_right(obj){
 		}
 		else{
 			fl_model_selected=this;
-			ul.style.display="block";
-			lis[0].style.display="block";
-			lis[1].style.display="block";
-			lis[2].style.display="block";
-			ul.style.top=e.clientY+"px";
-			ul.style.left=e.clientX+"px";
+			fl_model_ul.style.display="block";
+			fl_model_lis[0].style.display="block";
+			fl_model_lis[1].style.display="block";
+			fl_model_lis[2].style.display="block";
+			fl_model_ul.style.top=e.clientY+"px";
+			fl_model_ul.style.left=e.clientX+"px";
 
 		}
 
@@ -213,7 +277,7 @@ function fl_model_setpos(){
 	}
 }
 function fl_model_setcavzindex(){//must after setpos
-
+	console.log("set cav id");
 	//获取floors，然后对其top排序，在上的放前面
 	var fls=document.getElementsByClassName("floorbox");
 	var fls_array=[]
@@ -228,8 +292,9 @@ function fl_model_setcavzindex(){//must after setpos
 	);
 	//对排好的floor，更改cav的zindex
 	for(var i=0;i<fls.length;i++){
-		var cavid="draw_"+fls_array[i].id.substring(2,);
 
+		var cavid="draw_"+fls_array[i].id.substring(2,);
+		console.log(cavid);
 		var floor_to_cav=document.getElementById(cavid);
 		floor_to_cav.style.zIndex=(-6-i);
 	}
@@ -254,6 +319,7 @@ function fl_model_button_add(){
 	new_cav_name="draw_"+new_cav_name;
 	fl_model_new_cav(new_cav_name);
 	fl_model_setcavzindex();
+
 }
 function fl_model_add_floor(floor_name){//floor_name="xxxx" or ""(auto) not "draw_xxxx"
 
@@ -334,10 +400,11 @@ function fl_model_del(name_obj,usename=false){
 
 
 window.onload=function(){
-	l_model_selected=null;
+	fl_model_selected=null;
 	fl_model_last_floor_name="";
 	fl_model_add_floor_button();
 	fl_model_add_floor_init();
 
 }
 
+//【bug】要改掉addfloor时的名米ingfangshi
