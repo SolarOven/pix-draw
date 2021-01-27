@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>pix draw-v1.0</title>
+	<title>pix draw-v1.2</title>
 	<style type="text/css">
 
 		#back{
@@ -59,7 +59,7 @@
 <button id="input"  type="button" onclick="input_data()">input</button>
 <button id="output" type="button" onclick="send_data()">output</button>
 
-<canvas id="draw_draw1" class="draw"></canvas>
+<canvas id="draw_draw1" class="draw" style="top: 0px; left: 0px; position: absolute; z-index: -5;"></canvas>
 <canvas id="grid"></canvas>
 <canvas id="back"></canvas>
 
@@ -67,30 +67,27 @@
 	draw_name="";
 	cell_len=20;
 
-	draw=document.getElementById("draw_draw1");
+	draw=document.getElementsByClassName("draw")[0];
 	grid=document.getElementById("grid");
 	back=document.getElementById("back");
 
-	width  = back.width  = grid.width  = draw.width  = window.innerWidth;
-	height = back.height = grid.height = draw.height = window.innerHeight;
+		width  = back.width  = grid.width  = draw.width  = window.innerWidth;
+		height = back.height = grid.height = draw.height = window.innerHeight;
 	
 	ctx      = draw.getContext("2d");
 	grid_ctx = grid.getContext("2d");
 	back_ctx = back.getContext("2d");
 	
-	// grid_ctx.fillStyle="rgba(255,255,255,0)";
-	// grid_ctx.fillRect(0,0,width,height);
-
-
-	// back_ctx.fillStyle="rgba(255,255,255,0)";
-	// back_ctx.fillRect(0,0,width,height);
+	
 	
 	data_load=false;
 	init_grid_back();
 
 //model control cell
 	cur_color="rgba(255,255,0,0.5)";//controled by more_color.js
-	cur_ctx= ctx;//controled by more_floor.js
+
+	
+	cur_ctx= ctx;//controled by floor_model.js---fl_model
 //model control cell
 
 	//init the background-color and the grid-color
@@ -309,7 +306,7 @@
 	}
 </script>
 <script type="text/javascript" src="{{url_for('static',filename='floor_model.js')}}"></script>
-
+<script type="text/javascript" src="{{url_for('static',filename='color_model.js')}}"></script>
 
 </body>
 </html>

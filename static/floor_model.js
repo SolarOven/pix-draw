@@ -337,7 +337,6 @@ function fl_model_add_floor(floor_name){//floor_name="xxxx" or ""(auto) not "dra
 	f.style.top=n*41+"px";
 	return floor_name;_and_right
 }
-// fl_model_last_floor_name="";
 function fl_model_turn_ctx_cur(obj){
 
 	var fls=document.getElementsByClassName("floorbox");
@@ -401,7 +400,6 @@ function fl_model_del(name_obj,usename=false){
 
 window.onload=function(){
 	fl_model_selected=null;
-	fl_model_last_floor_name="";
 	fl_model_add_floor_button();
 	fl_model_add_floor_init();
 
