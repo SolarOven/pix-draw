@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>pix draw-v1.2</title>
+	<title>pix draw-v2.0</title>
 	<style type="text/css">
 
 		#back{
@@ -49,6 +49,13 @@
 		#body{
 			user-select: none;
 		}
+		#ereaser{
+			position: fixed;
+			z-index: 10;
+			left: 400px;
+
+		}
+
 	</style>
 </head>
 <body id="body">
@@ -58,10 +65,12 @@
 </form>
 <button id="input"  type="button" onclick="input_data()">input</button>
 <button id="output" type="button" onclick="send_data()">output</button>
+<button id="ereaser" type="button" onclick="change_draw()">	now:draw✏️</button>		
 
 <canvas id="draw_draw1" class="draw" style="top: 0px; left: 0px; position: absolute; z-index: -5;"></canvas>
 <canvas id="grid"></canvas>
 <canvas id="back"></canvas>
+
 
 <script type="text/javascript">
 	draw_name="";
@@ -71,9 +80,9 @@
 	grid=document.getElementById("grid");
 	back=document.getElementById("back");
 
-		width  = back.width  = grid.width  = draw.width  = window.innerWidth;
-		height = back.height = grid.height = draw.height = window.innerHeight;
-	
+	width  = back.width  = grid.width  = draw.width  = window.innerWidth;
+	height = back.height = grid.height = draw.height = window.innerHeight;
+
 	ctx      = draw.getContext("2d");
 	grid_ctx = grid.getContext("2d");
 	back_ctx = back.getContext("2d");
@@ -83,12 +92,11 @@
 	data_load=false;
 	init_grid_back();
 
-//model control cell
-	cur_color="rgba(255,255,0,0.5)";//controled by more_color.js
+	//model control cell
+		cur_color="rgba(255,255,0,0.5)";	//controled by color_model.js	
+		cur_ctx= ctx;						//controled by floor_model.js---fl_model
 
-	
-	cur_ctx= ctx;//controled by floor_model.js---fl_model
-//model control cell
+
 
 	//init the background-color and the grid-color
 	function init_grid_back(){
@@ -111,20 +119,22 @@
 	//drawing event
 	grid.onmousedown=function(event){
 
-
-
 		cur_ctx.fillStyle=cur_color;
 		var x=parseInt(event.clientX/cell_len)*cell_len;
 		var y=parseInt(event.clientY/cell_len)*cell_len;
 		last_x=x;//to provide to onmouse move,identify if need draw again or not.
 		last_y=y;
-		cur_ctx.fillRect(x,y,cell_len,cell_len);
+
+		cur_draw(cur_ctx,cur_color,x,y,cell_len,cell_len);
+
+		// cur_ctx.fillRect(x,y,cell_len,cell_len);
 		document.onmousemove=function(event){
-			cur_ctx.fillStyle=cur_color;
+			// cur_ctx.fillStyle=cur_color;
 			var x=parseInt(event.clientX/cell_len)*cell_len;
 			var y=parseInt(event.clientY/cell_len)*cell_len;
 			if(last_x!=x || last_y!=y){
-				cur_ctx.fillRect(x,y,cell_len,cell_len);
+				// cur_ctx.fillRect(x,y,cell_len,cell_len);
+				cur_draw(cur_ctx,cur_color, x,y,cell_len,cell_len);
 				last_x=x;//to provide to onmouse move,identify if need draw again or not.
 				last_y=y;
 			}
@@ -254,8 +264,7 @@
 		
 		fl_model_add_floor_init();
 	}
-
-	function get_data(){//to global var
+	function get_data(){//get drawed data  from many canvas, to global var
 
 		draw_name=get_name();
 		if(draw_name==""){
@@ -304,6 +313,33 @@
 
 		XHR.send(urlEncodedData);
 	}
+
+
+	//ereaser
+	cur_draw=draw_method;
+	function change_draw(){
+		var er_btn=document.getElementById("ereaser");
+		
+
+		if(cur_draw==draw_method){
+			er_btn.innerHTML="now:clean";
+			
+			cur_draw=clean_method;
+
+		}
+		else{
+			er_btn.innerHTML="now:draw✏️";
+			cur_draw=draw_method;
+		}
+	}
+	function draw_method(drawctx,color,x,y,W,H){
+		drawctx.fillStyle=color;
+		drawctx.fillRect(x,y,W,H);
+	}
+	function clean_method(drawctx,color,x,y,W,H){
+		drawctx.clearRect(x,y,W,H);
+	}
+
 </script>
 <script type="text/javascript" src="{{url_for('static',filename='floor_model.js')}}"></script>
 <script type="text/javascript" src="{{url_for('static',filename='color_model.js')}}"></script>
