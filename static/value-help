@@ -4,13 +4,15 @@ zindex
 	background=-1000
 
 global-var
-	var name						defined							used				describe
+	var name						defined						used				describe
 
-	cur_ctx							main							main,fl_model 		to set working cav floor		
-	fl_model_selected				fl_model 						fl_model 			right menu function required
-	cur_color						main 							main,cl_model 		to set useing color
-	cl_model_selected_H				cl_model 						cl_model 			to recover click-rect in canvas cl_model_color2
+	cur_ctx							main						main,fl_model 		to set working cav floor	
+	fl_model_selected				fl_model 					fl_model 			right menu function required
+	cur_color						main 						main,cl_model 		to set useing color
+	cl_model_selected_H				cl_model 					cl_model 			to recover click-rect in canvas:cl_model_color2
 
 debug
 
 	修改第一个draw_draw1的时候，改完就会导致draw_draw1 style失效，发现卸载标签style中的格式不会失效。
+
+	
