@@ -4,12 +4,34 @@ zindex
 	background=-1000
 
 global-var
-	var name						defined						used				describe
+	var name						defined			used					describe
 
-	cur_ctx							main						main,fl_model 		to set working cav floor	
-	fl_model_selected				fl_model 					fl_model 			right menu function required
-	cur_color						main 						main,cl_model 		to set useing color
-	cl_model_selected_H				cl_model 					cl_model 			to recover click-rect in canvas:cl_model_color2
+	cur_ctx							main			main,fl_model 			to set working cav floor	
+	fl_model_selected				fl_model 		fl_model 				right menu function required
+	cur_color						main 			main,cl_model,tl_model 	to set useing color
+	
+	cl_model_selected_H				cl_model 		cl_model 				to recover click-rect in canvas:cl_model_color2
+	
+	cur_method						main			main,tl_model			to define what need to do with your mouse
+
+	cur_cavid						main			main,fl_model 			used in msg,是msg字典的key，因为用cur_ctx获取不到id
+
+	msg								main			main,fl_model,tl_model  在新增一个图层：fl_new_cav()
+
+																			写入imagedata：tl_draw_method(),draw_method(),clean_method(),tl_clean_method()
+
+																			写入zindex：fl_setcavzindex()
+
+																			写入size:get_data(),get_json(),fl_new_cavdata()
+
+	cell_len						main			main,tl_model			every pix's width
+global-function
+	generaly, model & model don't allow depend on relation.
+	
+	fl_clear()
+	fl_new_cav()
+	fl_add_floor_init()
+
 
 debug
 

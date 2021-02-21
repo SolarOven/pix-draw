@@ -65,10 +65,10 @@ def in_not_python():
             
             pix_value=[draw_value[i:i+4] for i in range(len(draw_value))[1::4]] #[[xx,xx,xx,xx],[xx,xx,xx,xx],....]
             end_rsp[draw_name]=[zindex,[]]
-            for line in range(size[0]):
+            for row in range(size[0]):
                 end_rsp[draw_name][1].append([])
-                for row in range(size[1]):
-                    end_rsp[draw_name][1][line].append( pix_value[ line*size[1]+row ] )
+                for line in range(size[1]):
+                    end_rsp[draw_name][1][row].append( pix_value[ row*size[1]+line ] )
             #now i find that it need the width and the length cells
             #so then i need to change the out_draw.html
         return jsonify(end_rsp)

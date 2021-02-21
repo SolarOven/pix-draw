@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>快捷键</title>
+</head>
+<body>
+	<div>
+		<canvas id="1"></canvas>
+	</div>
+	<button type="button" id="bt" onclick="getcolor(e)">select color</button>
+
+<script type="text/javascript">
+	function getcolor(){
+		console.log("start get");
+	}
+
+
+	document.onkeydown=function(){
+		console.log(window.event.keyCode);
+		// if (window.event.altKey || window.event.ctrlKey || (window.event.keyCode == 69)) {
+  //       	alert("alt或者ctrl或者a");
+  //   	}
+	}
+	cur_ctx=ctx1;
+	var cav1=document.getElementById("1");
+		//conf
+		cav1.width=cav1.height=500;
+		cav1.style.width=cav1.style.width="500px";
+		cav1.position="fixed";
+		cav1.top="0px";
+		cav1.left="0px";
+	var ctx1=cav1.getContext("2d");
+		//draw
+		ctx1.fillStyle="rgb(255,255,0)";
+		ctx1.fillRect(0,0,250,250);
+
+
+</script>
+</body>
+</html>

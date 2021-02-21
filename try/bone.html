@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>pix draw-v2.0</title>
+	<title>bone anime</title>
 	<style type="text/css">
 
 		#back{
@@ -53,6 +53,7 @@
 			position: fixed;
 			z-index: 10;
 			left: 400px;
+
 		}
 
 	</style>
@@ -73,7 +74,7 @@
 
 <script type="text/javascript">
 	draw_name="";
-	cell_len=10;
+	cell_len=20;
 
 	draw=document.getElementsByClassName("draw")[0];
 	grid=document.getElementById("grid");
@@ -87,19 +88,14 @@
 	back_ctx = back.getContext("2d");
 	
 	
-    W_cell=parseInt(width/cell_len);
-    H_cell=parseInt(height/cell_len);
-
 	
 	data_load=false;
+	init_grid_back();
 
-
-	//model control part
-		cur_color="rgba(255,255,0,0.5)";	//controled by color_model.js
-		cur_ctx= ctx;						//controled by floor_model.js
-		cur_cavid="draw_draw1";				//controled by floor_model.js
+	//model control cell
+		cur_color="rgba(255,255,0,0.5)";	//controled by color_model.js	
+		cur_ctx= ctx;						//controled by floor_model.js---fl_model
 		cur_method=draw_method;				//controled by tools_model.js & main
-		msg={};								//controled by floor_model.js & main
 
 	//init the background-color and the grid-color
 		function init_grid_back(){
@@ -119,7 +115,6 @@
 			}
 			grid_ctx.stroke();
 		}
-	
 	//drawing event
 		grid.onmousedown=function(event){
 
@@ -151,65 +146,44 @@
 
 			}
 		}
-
 	//output
-		function new_cavdata(){
-			var s=Array();
-			for(i=0;i<H_cell;i++){
-				s.push(new Array());
-				for(j=0;j<W_cell;j++){
-					s[i].push([0,0,0,0]);
-			  	}
-			}
-			return s;
-		}
-
 		function get_json(){
-			msg["size"]=[H_cell,W_cell];
+			var canva_tags=document.getElementsByClassName("draw");
+
+			var msg={};
+			msg["size"]=[parseInt(height/cell_len),parseInt(width/cell_len)];
 			msg["name"]=draw_name;
-			return msg;
+			/*
+			msg:{
+			"cav id1":[z-index,cav_color],
+			"cav id2":[z-index,cav_color],
+			...
+			}
+
+			*/
+			var i=0;
+			for(i=0;i<canva_tags.length;i++){
+				var cur_cav=canva_tags[i];//对于每一个cav
+				var cav_info=window.getComputedStyle(cur_cav,null);
+				var cav_ctx=cur_cav.getContext("2d");
+				var cav_zindex=cav_info["z-index"];
+				var cav_id=cur_cav.id;
+			    var cav_color=[];
+			    var wbp;//wbp=will be push
+			    var W_cell=parseInt(width/cell_len);
+			    var H_cell=parseInt(height/cell_len);
+			    for(var j=0;j<H_cell;j++){//对每一列
+					cav_color.push([]);//新建列
+					for(var k=0;k<W_cell;k++){//每一列的每一行
+						wbp=cav_ctx.getImageData(k*cell_len,j*cell_len,1,1).data
+						cav_color[j].push(  [wbp[0],wbp[1],wbp[2],parseFloat(wbp[3]/255).toFixed(1)]);
+					}
+			    }
+			    msg[cav_id]=[cav_zindex, cav_color];
+		  }
+		 console.log(msg);
+		 return  msg;
 		}
-		msg["draw_draw1"]=[-6,new_cavdata()];
-
-		// function get_json(){
-		// 	var canva_tags=document.getElementsByClassName("draw");
-
-		// 	var msg={};
-		// 	msg["size"]=[parseInt(height/cell_len),parseInt(width/cell_len)];
-		// 	msg["name"]=draw_name;
-		// 	/*
-		// 	msg:{
-		// 	"cav id1":[z-index,cav_color(W_cell,H_cell,4)],
-		// 	"cav id2":[z-index,cav_color],
-		// 	...
-		// 	}
-
-		// 	*/
-		// 	var i=0;
-		// 	for(i=0;i<canva_tags.length;i++){
-		// 		var cur_cav=canva_tags[i];//对于每一个cav
-		// 		var cav_ctx=cur_cav.getContext("2d");
-		// 		var cav_zindex=window.getComputedStyle(cur_cav,null)["z-index"];
-		// 		var cav_id=cur_cav.id;
-		// 	    var cav_color=[];
-		// 	    var wbp;//wbp=will be push (to the array)
-
-
-		// 	    for(var j=0;j<H_cell;j++){//对每一列
-		// 			cav_color.push([]);//新建列
-		// 			for(var k=0;k<W_cell;k++){//每一列的每一行
-		// 				wbp=cav_ctx.getImageData(k*cell_len,j*cell_len,1,1).data
-		// 				wbp=[wbp[0],wbp[1],wbp[2],parseFloat(wbp[3]/255).toFixed(1)]
-		// 				cav_color[j].push( wbp );
-		// 			}
-		// 	    }
-		// 	    msg[cav_id]=[cav_zindex, cav_color];
-		//   }
-		//  console.log(msg);
-		//  return  msg;
-		// }
-
-
 		function send_data() {
 			draw_name=get_name();
 
@@ -254,30 +228,31 @@
 			var input=document.getElementById("draw_name");
 			return input.value;
 		}
+	
 	//input
 		function input_data(){
 			get_data();
-			k="draw_draw1";
 			//down is draw method
-			fl_clear(all=true);
-			
+			fl_model_clear(all=true);
 
 			var body=document.getElementsByTagName("body");
 			var i,j,zindex,pix_value;
 			var input_cav,input_ctx;
+			var new_cavid;
+			var cur_id;
+			console.log(data_load);
 			for(var k in data_load){
-				cur_cavid=k;
-				console.log(cur_cavid);
+
 				zindex = data_load[k][0];
 
 				pix_value = data_load[k][1];
 				
-				fl_new_cav(cur_cavid);
-				cur_ctx=document.getElementById(cur_cavid).getContext("2d");
-				document.getElementById(cur_cavid).style.zIndex=zindex;
+				fl_model_new_cav(k);
+
+				cur_ctx=document.getElementById(k).getContext("2d");
+				document.getElementById(k).style.zIndex=zindex;
 				
-				// msg[cur_cavid]=[zindex,new_cavdata()];转入fl_new_cav的时候对msg操作。在此处不操作。
-				
+
 				for(i=0;i<data_load[k][1].length;i++){
 					//第i行的
 					for(j=0;j<data_load[k][1][0].length;j++){
@@ -287,16 +262,17 @@
 						//第j列		[ ] [ ] [ ]
 						//		i-->[ ] [*] [ ]
 
-						draw_method(cur_ctx,'rgba('+String(data_load[k][1][i][j])+')',j*cell_len,i*cell_len,cell_len,cell_len);
+						cur_ctx.fillStyle='rgba('+String(data_load[k][1][i][j])+')';
+						
+						cur_ctx.fillRect(j*cell_len,i*cell_len,cell_len,cell_len);
 					}
 				}
 				
 				
 			}
 
-			msg["size"]=[data_load[k][1].length,data_load[k][1][0].length];
-			console.log(data_load[k][1].length,data_load[k][1][0].length);
-			fl_add_floor_init();
+			
+			fl_model_add_floor_init();
 		}
 		function get_data(){//get drawed data  from many canvas, to global var
 
@@ -305,7 +281,8 @@
 				alert("have not give the filename");
 				return 0;
 			}
-			var data={"name":draw_name};
+			var msg={"name":draw_name};
+			var data=msg;
 
 			var XHR = new XMLHttpRequest();
 			var urlEncodedData = "";
@@ -336,13 +313,8 @@
 			XHR.onreadystatechange=function(){
 				if (XHR.readyState == 4 && XHR.status == 200) {//4:done 200:request success
 	                console.log("done and 200");
-	                // console.log(XHR.response);
-	                // ffff=XHR.response;
-	                // tttt=XHR.responseText;
 	                var json = XHR.responseText;//获取到json字符串，还需解析
 	                data_load=JSON.parse(json);
-	                console.log("parsejson,",JSON.parse( json),"\n end");
-
 	            }
 	            else if(XHR.status == 500){
 	            	alert("no such file!");
@@ -350,86 +322,57 @@
 			};
 
 			XHR.send(urlEncodedData);
-
 		}
 
 
-	//draw method changer
+	//ereaser
 		function change_draw(){
 			var er_btn=document.getElementById("ereaser");
-			if(tl_loaded){
-				if(cur_method==tl_draw_method){
-					er_btn.innerHTML="now:clean";
-					cur_method=tl_clean_method;
-				}
-				else{
-					er_btn.innerHTML="now:draw✏️";
-					cur_method=tl_draw_method;
-				}
+			if(cur_method==draw_method){
+				er_btn.innerHTML="now:clean";
+				cur_method=clean_method;
+
 			}
 			else{
-				if(cur_method==draw_method){
-					er_btn.innerHTML="now:clean";
-					cur_method=clean_method;	
-				}
-				else{
-					er_btn.innerHTML="now:draw✏️";
-					cur_method=draw_method;	
-				}
+				er_btn.innerHTML="now:draw✏️";
+				cur_method=draw_method;
 			}
-			
 		}
 		function draw_method(drawctx,color,x,y,W,H){
-			// console.log("i know the cavid is ",cur_cavid);
 			drawctx.fillStyle=color;
 			drawctx.fillRect(x,y,W,H);
-			
-			var a=parseInt( x/cell_len);
-			var a_add=parseInt(W/cell_len);
-
-			var b=parseInt( y/cell_len);
-			var b_add=parseInt(H/cell_len);
-
-			var list=color;
-			list=list.split(",")
-			list[0]=list[0].substring(5,);
-			list[3]=list[3].substring(0,list[3].length-1);
-
-			for(var i=a;i<a+a_add;i++){
-				for(var j=b;j<b+b_add;j++){
-					msg[cur_cavid][1][j][i]=list;
-				}
-			}
-			
 		}
 		function clean_method(drawctx,color,x,y,W,H){
 			drawctx.clearRect(x,y,W,H);
-
-
-			var a=parseInt( x/cell_len);
-			var a_add=parseInt(W/cell_len);
-
-			var b=parseInt( y/cell_len);
-			var b_add=parseInt(H/cell_len);
-
-			for(var i=a;i<a+a_add;i++){
-				for(var j=b;j<b+b_add;j++){
-					msg[cur_cavid][1][j][i]=[0,0,0,0];
-				}
-			}
 		}
 
-	//run part
-		init_grid_back();
+</script>
+	
+<script>
+	function bl_crt(tagname,id,classe,father,msg){
 
+		var s=document.createElement(tagname);
+		if(msg!=""){
+			s.appendChild(document.createTextNode(msg));
+		}
+		if(classe!=""){
+			s.setAttribute("class",classe);			
+		}
+		s.setAttribute("id",id);
+		father.appendChild(s);
+		return s
+	}
+	function bone_init(){
+		var body=document.getElementById("body");
+		var bone=bl_crt("canvas","bl_bone","",body,"");
+		bone.width=bone.style.width=width;
+		bone.height=bone.style.height=height;
+		bone.style.position="fixed";
+		bone.style.zIndex=0;
+
+		bone.
+	}
 
 </script>
-
-<script type="text/javascript">tl_loaded=fl_loaded=cl_loaded=false;</script>
-
-<script type="text/javascript" src="{{url_for('static',filename='floor_model.js')}}"></script>
-<script type="text/javascript" src="{{url_for('static',filename='color_model.js')}}"></script>
-<script type="text/javascript" src="{{url_for('static',filename='tools_model.js')}}"></script>
-
 </body>
 </html>
