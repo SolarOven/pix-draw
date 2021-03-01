@@ -40,7 +40,6 @@ height=window.innerHeight;
 //设置css样式以及定义右键
 	function fl_set_floor(divs){
 
-		// divs.setAttribute("style", "border-radius:5px;");
 		divs.style.width="100px";	
 		divs.style.height="30px";
 		divs.style.border="1px solid black";
@@ -126,6 +125,8 @@ height=window.innerHeight;
 		fl_cancel();
 	}
 	function fl_rename_floor_and_canv(obj){
+
+
 		var rename_input=document.getElementById("fl_rename_input");
 		var rename_button=document.getElementById("fl_rename_button");
 		var selected_name="";
@@ -139,22 +140,30 @@ height=window.innerHeight;
 	 	rename_input.style.left=event.clientX+"px";
 	 	rename_button.style.left=String(Number(event.clientX)+30)+"px";
 	}
+
 	function fl_rename(){
 
 		if(fl_selected==null){
 			alert("error,fl_selected==null");
 		}
-		else{
+		else{	
+			
 			selected_name=fl_selected.id.substring(2,);
 			var rename_cav=document.getElementById("draw_"+selected_name);
 			var rename_floor=fl_selected;
 
+
+			var temp=msg["draw_"+selected_name];
+			delete msg["draw_"+selected_name];
+			
+
 			var willbe_name=document.getElementById("fl_rename_input").value;
+			msg["draw_"+willbe_name]=temp;
+			
 			rename_floor.innerHTML=willbe_name;
 			rename_floor.id="f_"+willbe_name;
 			rename_cav.id="draw_"+willbe_name;
 			fl_cancel();
-			//【bug】推测若是用dom标签写的改id就会清空属性，其他则不会。
 
 		}
 	}
@@ -195,8 +204,10 @@ function fl_setcavzindex(){//must after setpos
 	);
 	//对排好的floor，更改cav的zindex
 	for(var i=0;i<fls.length;i++){
-
+		
 		var cavid="draw_"+fls_array[i].id.substring(2,);
+		console.log(cavid);
+		console.log(fls_array);
 		var floor_to_cav=document.getElementById(cavid);
 		msg[cavid][0] = floor_to_cav.style.zIndex = (-6-i);
 
@@ -356,9 +367,6 @@ function fl_del(name_obj,usename=false){
 		fl_lis[2].setAttribute("onclick","fl_cancel()");
 		//set ret menu --- rename
 
-		// <input id="fl_rename_box" type="text" placeholder="Please input your floor's name">
-		// <button id="fl_yesrename" onclick="yesrename()"></button>
-		// function fl_crt(tagname,id,classe,father,msg)
 		var fl_rename_input=fl_crt("input","fl_rename_input","",body,"");
 		var fl_rename_button=fl_crt("button","fl_rename_button","",body,"yes");
 		

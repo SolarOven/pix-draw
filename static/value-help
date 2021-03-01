@@ -1,6 +1,7 @@
 zindex
 	tools:0
-	grid:-5
+	grid:-1
+	draw:[-6,-999]
 	background=-1000
 
 global-var
@@ -24,7 +25,11 @@ global-var
 
 																			写入size:get_data(),get_json(),fl_new_cavdata()
 
+																			更改图层key名:fl_rename()
+
+
 	cell_len						main			main,tl_model			every pix's width
+
 global-function
 	generaly, model & model don't allow depend on relation.
 	
@@ -35,6 +40,6 @@ global-function
 
 debug
 
-	修改第一个draw_draw1的时候，改完就会导致draw_draw1 style失效，发现卸载标签style中的格式不会失效。
+	修改第一个draw_draw1的时候，改完就会导致draw_draw1 style失效，发现写在标签style中的格式不会失效。
 
 	
